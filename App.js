@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState, useEffect} from 'react'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+export default App = () => {
+  <View style={styles.container}>
+    <Text style={styles.title}>Welcome to DogApp!</Text>
+  </View>
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  container:{
+    flex:1,
     justifyContent: 'center',
+    alignItems: 'center'
   },
-});
+  title: {
+    fontSize: 30,
+    marginBottom:20,
+    fontWeight: "bold"
+  }
+})
