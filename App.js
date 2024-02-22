@@ -4,23 +4,21 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'reac
 
 
 export default App = () => {
-  const [image, setImage] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const [error, setError] = useState(null);
 
   const getImage = async() => {
     try{
       const res = await fetch('https://dog.ceo/api/breeds/image/random');
       const data = await res.json();
-      setImage(data);
+      setImageData(data);
       setError(null);
+      console.log(imageData.message)
     }catch(err){
-      setError(`Error finding weather data!`)
+      setError(`Error finding dog Image!: ${err}`)
     }
   }
 
-  useEffect(()=>{
-    getImage();
-  },[]);
 
   return[
     <View style={styles.container}>
@@ -28,9 +26,8 @@ export default App = () => {
       <TouchableOpacity onPress={getImage}>
         <Text>Get Image</Text>
       </TouchableOpacity>
-      {error && <Text>{error}</Text>}
-      {image && <Image source={{uri: image.message}}/>}
-
+      {error && (<Text>{error}</Text>)}
+      {imageData && (<Image style={styles.image} source={{uri:imageData.message}}/>)}
     </View>
   ]
 }
@@ -45,5 +42,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginBottom:20,
     fontWeight: "bold"
+  },
+  image:{
+    width: 200,
+    height: 180,
+    margin: 10
   }
 })
