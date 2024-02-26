@@ -9,6 +9,8 @@ export default App = () => {
   const [imageData, setImageData] = useState(null);
   const [localImage, setLocalImage] = useState(null);
   const [error, setError] = useState(null);
+  const [imgIndex, setImgIndex] = useState(null);
+  const [imgArray, setImgArray] = useState([]);
 
   const getImage = async() => {
     try{
@@ -46,6 +48,7 @@ export default App = () => {
   
       await AsyncStorage.setItem(`Img${newCounter}`, value);
       await AsyncStorage.setItem('counter', newCounter.toString());
+      setImgArray([...imgArray, newCounter]);
 
       if (counter !== null) {
         lastCounter = parseInt(counter) + 1
@@ -54,21 +57,32 @@ export default App = () => {
       }
       const newImage = await AsyncStorage.getItem(`Img${lastCounter}`)
       setLocalImage(newImage);
-      
     } catch (e) {
       console.error('Error on saving dog image!:', e);
     }
   };
 
   const randomImage = async() =>{
-    const counter = await AsyncStorage.getItem('counter');
-    console.log("counter: ",counter)
-    let randomIndex = Math.floor(Math.random() * (parseInt(counter)+1));
-    console.log("index: ",randomIndex)
-    const imageRandom = await AsyncStorage.getItem(`Img${randomIndex}`)
-    setLocalImage(imageRandom);
+    console.log("Este es el arreglo cuando randomizo: ",imgArray);
+    let randomIndex 
+    if(imgArray.length > 0){
+      randomIndex = Math.floor(Math.random() * (imgArray.length));
+    }else{
+      randomIndex = null;
+    }
+    setImgIndex(randomIndex);
+    console.log("Este es el index randomizado:",randomIndex);
+    const newImage = await AsyncStorage.getItem(`Img${imgArray[randomIndex]}`)
+    setLocalImage(newImage);
   }
 
+  const removeImage = async() =>{
+    console.log("Este es el index que deberia eliminar: ", imgIndex)
+    const newArray = imgArray.filter((_, index) => index !== imgIndex);
+    setImgArray(newArray);
+    console.log("Este es el nuevo arreglo: ", newArray)
+  }
+  
   const restartAsyncStorage = async () => {
     try {
       await AsyncStorage.clear();
@@ -88,7 +102,7 @@ export default App = () => {
   useEffect(() => {
     getImage();
     localOnInit();
-    // restartAsyncStorage();
+    restartAsyncStorage();
   }, []); 
 
 
@@ -106,6 +120,9 @@ export default App = () => {
       {localImage && <Image style={styles.imageAPI} source={{ uri: localImage }} />}
       {localImage &&  <TouchableOpacity onPress={randomImage}>
                         <Text>Randomize Local Images</Text>
+                      </TouchableOpacity>}
+      {localImage &&  <TouchableOpacity onPress={removeImage}>
+                        <Text>Delete this Image</Text>
                       </TouchableOpacity>}
     </View>
   ]
