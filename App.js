@@ -63,7 +63,6 @@ export default App = () => {
   };
 
   const randomImage = async() =>{
-    console.log("Este es el arreglo cuando randomizo: ",imgArray);
     let randomIndex 
     if(imgArray.length > 0){
       randomIndex = Math.floor(Math.random() * (imgArray.length));
@@ -71,16 +70,13 @@ export default App = () => {
       randomIndex = null;
     }
     setImgIndex(randomIndex);
-    console.log("Este es el index randomizado:",randomIndex);
     const newImage = await AsyncStorage.getItem(`Img${imgArray[randomIndex]}`)
     setLocalImage(newImage);
   }
 
   const removeImage = async() =>{
-    console.log("Este es el index que deberia eliminar: ", imgIndex)
     const newArray = imgArray.filter((_, index) => index !== imgIndex);
     setImgArray(newArray);
-    console.log("Este es el nuevo arreglo: ", newArray)
   }
   
   const restartAsyncStorage = async () => {
@@ -108,21 +104,21 @@ export default App = () => {
 
   return[
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to DogApp!</Text>
-      <TouchableOpacity onPress={getImage}>
-        <Text>Random Dog</Text>
+      <Text style={styles.title}>Welcome to DogApp! 🐶</Text>
+      <TouchableOpacity style={styles.buttons} onPress={getImage}>
+        <Text style={styles.buttonText}>Random Dog</Text>
       </TouchableOpacity>
       {error && (<Text>{error}</Text>)}
-      {imageData && (<Image style={styles.imageAPI} source={{uri:imageData.message}}/>)}
-      <TouchableOpacity onPress={pickImage}>
-        <Text>Pick an image from camera roll</Text>
+      {imageData && (<Image style={styles.images} source={{uri:imageData.message}}/>)}
+      <TouchableOpacity style={styles.buttons} onPress={pickImage}>
+        <Text style={styles.buttonText}>Or pick an image from your camera roll</Text>
       </TouchableOpacity>
-      {localImage && <Image style={styles.imageAPI} source={{ uri: localImage }} />}
-      {localImage &&  <TouchableOpacity onPress={randomImage}>
-                        <Text>Randomize Local Images</Text>
+      {localImage && <Image style={styles.images} source={{ uri: localImage }} />}
+      {localImage &&  <TouchableOpacity style={styles.buttons} onPress={randomImage}>
+                        <Text style={styles.buttonText}>Randomize Local Images</Text>
                       </TouchableOpacity>}
-      {localImage &&  <TouchableOpacity onPress={removeImage}>
-                        <Text>Delete this Image</Text>
+      {localImage &&  <TouchableOpacity style={styles.buttons} onPress={removeImage}>
+                        <Text style={styles.buttonText}>Delete this Image</Text>
                       </TouchableOpacity>}
     </View>
   ]
@@ -132,16 +128,27 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: "#F9E8C9"
   },
   title: {
     fontSize: 30,
     marginBottom:20,
     fontWeight: "bold"
   },
-  imageAPI:{
+  images:{
     width: 200,
     height: 180,
-    margin: 10
+    margin: 10,
+    borderRadius: 5
+  },
+  buttons: {
+    backgroundColor: "#98ABEE",
+    padding: 5,
+    margin: 10,
+    borderRadius: 5
+  },
+  buttonText: {
+    color: "#ffffff"
   }
 })
